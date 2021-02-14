@@ -1,0 +1,2 @@
+#!/bin/bash
+g++ -O3 mGL_srf.cpp -lmgl -o plot

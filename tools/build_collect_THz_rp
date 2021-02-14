@@ -1,0 +1,2 @@
+#!/bin/bash
+g++ collect_THz_rp.c -O3 -fopenmp -lmgl -o collect_THz_rp

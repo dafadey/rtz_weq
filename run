@@ -1,0 +1,18 @@
+#!/bin/bash
+mydir=hi_test_sharp_w2amp=${2}_w2pahse=${3}_w2curv=${4}
+rm -rf $mydir
+mkdir $mydir
+cd $mydir
+cp ../appl .
+mkdir pics
+mkdir pics/res
+mkdir pics/jpg
+cp ../pics/srf pics
+cp ../pics/plot pics
+cp ../pics/plotall pics
+cp ../pics/mkmovie pics
+echo "running (./appl $1 $2 $3 $4 > /dev/null &)"
+(./appl $1 $2 $3 $4 > /dev/null &)
+cd ..
+
+

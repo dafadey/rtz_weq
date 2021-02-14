@@ -1,0 +1,47 @@
+#!/bin/bash
+
+name="$1"
+
+lsres=`ls res/ | grep $name`
+
+let i=0
+for fl in $lsres
+do
+let i=$i+1
+list[$i]=fl
+done
+
+echo "found ${#list[@]} files"
+
+filenum=${#list[@]}
+
+procnum=`cat /proc/cpuinfo | grep processor | wc -l`
+
+let pack=$filenum
+let pack/=$procnum
+
+echo "pack=$pack"
+
+for i in `seq 1 $procnum`
+do
+let i0=$i-1
+let i0*=$pack
+let i1=$i
+let i1*=$pack
+let mask=1
+	for j in `seq 1 $i`
+	do
+		let mask*=2
+	done
+let mask/=2
+mask=`printf '%x\n' $mask`
+if [ -z "$2" ]
+   then
+	echo "running on $i proc mask $mask"
+	taskset $mask ./plot $name $i0 $i1 > /dev/null &
+else
+	echo "running on $i proc mask $mask"
+	taskset $mask ./plot $name $i0 $i1 $2 > /dev/null &
+fi
+done
+

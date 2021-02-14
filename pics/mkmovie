@@ -1,0 +1,5 @@
+#!/bin/bash
+#jpeg2yuv -f 25 -I p -j jpg/field%03d.jpg | yuvscaler -O DVD | mpeg2enc -f 8 -o movie$1.m1v
+cd jpg
+mencoder "mf://field*.jpg" -mf fps=25 -o test.avi -ovc lavc -lavcopts vcodec=msmpeg4v2:vbitrate=800
+mv test.avi ../movie_$1.avi

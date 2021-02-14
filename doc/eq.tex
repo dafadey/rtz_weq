@@ -1,0 +1,74 @@
+\documentclass{article}
+\title{Wave equation} %\LaTeX is a macro for printing the Latex logo
+\author{Daniil A. Fadeev}
+\newcommand{\dd}{\partial}
+\newcommand{\ff}{\frac}
+
+\begin{document}
+\maketitle
+This is a technical documentation for numerical algorithm
+\section{wave equation}
+Maxwell equations:
+\begin{eqnarray}
+\mathrm{rot} H = \ff{1}{c}\ff{\dd E}{\dd t}+\ff{4\pi}{c} j, \\
+\mathrm{rot} E = - \ff{1}{c}\ff{\dd H}{\dd t}.
+\end{eqnarray}
+Equation for current:
+\begin{equation}
+\ff{\dd j}{\dd t}=\ff{e^2}{m} n E.
+\end{equation}
+From Maxwell equations we have:
+\[ \mathrm{rot}\,\mathrm{rot} E + \ff{1}{c^2}\ff{\dd^2 E}{\dd t^2}+\ff{4\pi}{c^2}\ff{\dd j}{\dd t}=0 \]
+Substituting equation for current we obtain wave equation:
+\begin{equation}
+- \Delta_\perp E -\ff{\dd^2 E}{\dd z^2} + \ff{1}{c^2}\ff{\dd^2 E}{\dd t^2}+\ff{4\pi e^2}{m c^2} n E = 0
+\end{equation}
+If $rot=0$ we have plasma oscillations:
+\begin{equation}
+\ff{\dd^2 E}{\dd t^2}+\ff{4\pi e^2}{m} n E = 0
+\end{equation}
+Okay, $4 \pi e^2 n / m$ is a square of plasma frequency. Let us continue.
+Passing to new variables:
+\begin{eqnarray}
+z = z, \\
+\tau=t-\frac{z}{c}.
+\end{eqnarray}
+Using rules
+\[ \ff{\dd}{\dd z}=\ff{\dd}{\dd z} -\ff{1}{c}\ff{\dd}{\dd \tau} \]
+\[ \ff{\dd}{\dd t}=\ff{\dd}{\dd \tau} \]
+We obtain the following equation:
+\begin{equation}
+- \Delta_\perp E +\ff{2}{c}\ff{\dd^2 E}{\dd z \dd \tau} +\ff{4\pi e^2}{m c^2} n E = 0,
+\end{equation}
+$\dd/\dd z^2$ is neglected here. Plasma density is calculated as follows:
+\begin{equation}
+\ff{\dd n}{\dd \tau}=N_0 \mathrm{w_0}\left(\ff{\left|E\right|}{E_0}\right)^{-0.625} \mathrm{exp}\left(-\ff{E_0}{\left|E\right|}\right),
+\end{equation}
+where $N_0$ is $\mathrm{O_2}$ neutral density $n_0=10^{19}\,\mathrm{cm}^{-3}$ ($\mathrm{O_2}$ ionization potential is $14.01\,\mathrm{ev}$ while $\mathrm{N_2}$ ionization potential is $15.51\,\mathrm{ev}$, air consists of ~20\% $\mathrm{O_2}$ and ~80\% $\mathrm{N_2}$)
+\section{Dimensionless units:}
+We uze:
+\[ z_0=\ff{2}{k_0}=0.248\,\mathrm{\mu m}, \ k0=\ff{2\pi}{\lambda}=80553.65779\,\mathrm{cm}^{-1} \]
+\[ \tau_0=\ff{T}{2\pi}=0.41\,\mathrm{fs}, \ T=\ff{\lambda}{c} \mathrm{\ - \ optic \ period \ at \ 780 \, nm} \]
+equation is written as
+\begin{equation}
+- \ff{1}{x_0^2}\Delta_\perp E +\ff{2}{c \tau_0 z_0}\ff{\dd^2 E}{\dd z \dd \tau} + n_0 \ff{4\pi e^2}{m c^2} n E = 0,
+\end{equation}
+where al operators and variables without ineds are dimensionless.
+In calculations we use the following form of equation:
+\[ - 2 \Delta_\perp E +\ff{\dd^2 E}{\dd z \dd \tau} + n E = 0. \]
+Thus
+\[  \ff{1}{x_0^2}=2 \times \ff{2}{c \tau_0 z_0} = 2 k_0^2 \]
+\[ n_0 \ff{4\pi e^2}{m c^2}=k_0^2 \]
+So
+\begin{eqnarray}
+x_0=\ff{1}{\sqrt{2}k_0}=0.087\,\mathrm{\mu m} \\
+n_0=\ff{\omega^2 m}{4 \pi e^2}=2\times10^{21}\,\mathrm{cm^{-3}}
+\end{eqnarray}
+In numerical scheme equation for plasma density reads as follows:
+\[ \ff{\dd n}{\dd \tau} = \left(\ff{\left|E\right|}{E_0}\right)^{-0.625} \mathrm{exp}\left(-\ff{E_0}{\left|E\right|}\right), \]
+Thus
+\[ \ff{n_0}{\tau_0}=N_0 \mathrm{w_0} \]
+So
+\[ \mathrm{w_0} = \ff{n_0}{\tau_0 N_0} = 2.4\,\mathrm{fs^{-1}} \]
+
+\end{document}

@@ -1,0 +1,15 @@
+#!/bin/bash
+if [ -z "$1" ]
+then
+ fl="string flname=\"../result.dat\";"
+else
+ fl="string flname=\"../result_$1.dat\";"
+fi
+
+p="$$"
+
+echo $fl > tmp$p.asy
+cat thz_src.asy >> tmp$p.asy
+asy tmp$p.asy
+rm tmp$p.asy
+mv tmp$p.pdf thz_src_$1.pdf

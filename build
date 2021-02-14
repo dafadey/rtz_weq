@@ -1,0 +1,22 @@
+#!/bin/bash
+arch=CC30
+mrch=sm_30
+INC="-I/usr/local/cuda-9.0/include -I/usr/local/cuda-9.0/samples/common/inc"
+LIB="/usr/local/cuda-9.0/lib64"
+fm= #--use_fast_math #coment it if you want divisions and transcend funcs to be IEEE or something similar to IEEE
+
+echo "cleaning..."
+rm -f *.obj appl
+
+echo "compiling..."
+echo "   gpu..."
+/usr/local/cuda-9.0/bin/nvcc -w -Xcompiler -fPIC $INC -O3 -c -arch=$mrch $fm -lineinfo src/thz_kernels.cu -o thz_kernels.obj
+
+echo "   cpu..."
+g++ -std=c++11 $INC src/thz.cpp -c -O3 -o thz.obj
+#gcc simpledraw2D.cpp -c O2 -o simpledraw2D.obj
+
+echo "linking..."
+g++ -L${LIB} thz.obj thz_kernels.obj -lpthread -lcudart -lcufft -Wl,-rpath=${LIB} -o appl
+
+rm -f *.obj

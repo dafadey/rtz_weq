@@ -1,0 +1,2 @@
+#!/bin/bash
+g++ collect_THz_src_stat.c -lmgl -fopenmp -o collect_THz_src_stat
