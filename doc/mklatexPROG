@@ -1,0 +1,10 @@
+#!/bin/bash
+pdflatex prog.doc.tex
+for i in `ls | grep prog.doc-`
+do
+  echo doing asy $i
+  asy $i -f pdf
+done
+pdflatex prog.doc.tex
+#dvipdf prog.doc.dvi
+#rm -f prog.doc-*

@@ -1,0 +1,100 @@
+\documentclass{article}
+\title{Parabolic focusing} %\LaTeX is a macro for printing the Latex logo
+\author{Daniil A. Fadeev}
+\newcommand{\dd}{\partial}
+\newcommand{\ff}{\frac}
+\newcommand{\ci}{\mathbf{i}}
+\newcommand{\mathz}{\ooalign{$z$\cr\hfil\rule[.5ex]{.2em}{.06ex}\hfil\cr}}
+\usepackage{amsfonts}
+\usepackage{amsmath,esint}
+\usepackage[inline]{asymptote}
+
+\begin{document}
+
+\maketitle
+This is a technical document to ease calculations of beam parabolic focusing parameters.
+Let us start with Shr{\"o}edinger equation
+\begin{equation}
+\label{shroedinger}
+\ci\ff{\dd E}{\dd z}+\ff{D}{r}\ff{\dd}{\dd r}\left(r \ff{\dd E}{\dd r}\right) = 0.
+\end{equation}
+Solution can be derived in the following form:
+\begin{equation}
+\label{solution_general}
+E = A(z) \exp(-a r^2) \exp(\ci b r^2),
+\end{equation}
+where $A \in \mathbb{C}$, $a,b \in \mathbb{R}$. By substituting (\ref{solution_general}) into (\ref{shroedinger}):
+\begin{equation}
+\label{subst}
+\ci A' - \ci A a' r^2 - A b' r^2 - 4 D A (a-\ci b) + 4DA(a-\ci b)^2 r^2=0,
+\end{equation}
+we can derive the following relations:
+\begin{equation}
+\label{sys1}
+a' = -8Dab
+\end{equation}
+\begin{equation}
+\label{sys2}
+-b'+4D(a^2-b^2)=0
+\end{equation}
+\begin{equation}
+\label{sys3}
+\ci A'-4DA(a-\ci b)=0
+\end{equation}
+From (\ref{sys1}) and (\ref{sys2}) we have:
+\begin{equation}
+\label{sys2_1}
+-a''a+\ff{3}{2}a'^2=32D^2a^4
+\end{equation}
+\begin{equation}
+\label{sys2_2}
+b=-\ff{a'}{8Da}
+\end{equation}
+The final solution is the following:
+\begin{equation}
+\label{sol1}
+a=\ff{1}{\ff{16D^2}{R_0^2}z^2+R_0^2}
+\end{equation}
+\begin{equation}
+\label{sol2}
+b=\ff{4Dz}{R_0^2}\ff{1}{\ff{16D^2}{R_0^2}z^2+R_0^2}
+\end{equation}
+Inverse formulas read as follows:
+\begin{equation}
+\label{invsol1}
+R_0^2=\ff{a}{a^2+b^2}
+\end{equation}
+\begin{equation}
+\label{invsol2}
+z=\ff{1}{4D}\ff{b}{a^2+b^2}
+\end{equation}
+Let us also derive something to get $R_0$ from $z_1$ and initial radius $R_1$ ($1/a(z_1)$). From (\ref{sol1}) we have:
+\[ R_0^2 = \ff{R_1^2}{2}-\sqrt{\ff{R_1^4}{4}-16 D^2 z_1^2} \]
+Let us also rewrite for focal diameter:
+\[ D_0^2 = \ff{D_1^2}{2}-\sqrt{\ff{D_1^4}{4}- 256 D^2 z_1^2} \]
+Here $R_0^2$ is beam radius square ($1/a(z=0)$) at focal point ($z=0$).
+Now let us find solution for complex anplitude $A$ which can be rewritten in the following form: $A=|A|\exp(\ci \phi)$. Then from (\ref{sys3}) we have:
+\[ \ci A' A* - 4D|A|^2(a-\ci b) = 0 \]
+\[ -\ci A*' A - 4D|A|^2(a + \ci b) =0 \]
+Then
+\[ \left(|A|^2\right)' - 8 D |A|^2 b = 0 \]
+Using (\ref{sys1}) we can derive the following:
+\[ \ff{\left(|A|^2\right)'}{|A|^2}+\ff{a'}{a} = 0 \]
+Then for $|A|^2$:
+\[ |A|^2 a = \text{const} \]
+and for $\phi$:
+\[ \phi'+4Da = 0 \]
+\section{FWHM}
+Let us also add convenience relations for beam width in FWHM notation.
+Let the field amplitude to be set in the form
+\[ A(r) \propto \exp\left(-\ff{r^2}{r_{A/e}^2}\right) \]
+Then intensity would be
+\[ I(r) \propto A^2 \propto \exp\left(-2 \ff{r^2}{r_{A/e}^2}\right) \]
+here $r_0$ is field raduis at $1/e$. We want intesity radius at $1/2$ level, so
+\[ -2 \ff{r^2}{r_{A/e}^2} = -\ln(2) \]
+\[ r_{I/2} = \sqrt{\ff{\ln(2)}{2}} \ r_{A/e} \approx 0.588 \ r_{A/e}  \]
+and vice versa
+\[ r_{A/e} \approx 1.7 \ r_{I/2}  \]
+
+\end{document}
+

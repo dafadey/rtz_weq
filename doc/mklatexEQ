@@ -1,0 +1,13 @@
+#!/bin/bash
+cd test/townes
+asy -f pdf townes.asy
+cd ../../
+pdflatex eq.tex
+for i in `ls | grep eq-`
+do
+  echo doing asy $i
+  asy $i -f pdf
+done
+pdflatex eq.tex
+#dvipdf eq.dvi
+rm -f eq-*

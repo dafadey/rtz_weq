@@ -7,7 +7,7 @@
 //p_o_* - is out array - CONTAINST OUTPUT DATA
 //p_i_* - is in array - CONTAINS DATA TO BE TRANSFORMED
 //pp_in_* - is internal array - CONTAINS NO DATA ( MUST BE SIZE OF INPUT=OUTPUT DATA)
-int qqFFT(long int N, FL_DBL* p_o_r, FL_DBL* p_o_i, FL_DBL* pp_in_r, FL_DBL* pp_in_i)
+static int qqFFT(long int N, FL_DBL* p_o_r, FL_DBL* p_o_i, FL_DBL* pp_in_r, FL_DBL* pp_in_i)
 {
 FL_DBL*	tmp_r;
 FL_DBL*	tmp_i;
@@ -175,7 +175,7 @@ long int a1,a2,a3,a4,a0,k1,dim,p_dim,N_l,cFT;
 //p_o_* - is out array - CONTAINST OUTPUT DATA
 //p_i_* - is in array - CONTAINS DATA TO BE TRANSFORMED
 //pp_in_* - is internal array - CONTAINS NO DATA ( MUST BE SIZE OF INPUT=OUTPUT DATA)
-int qqFFT_1(long int N, FL_DBL* p_o_r, FL_DBL* p_o_i, FL_DBL* pp_in_r, FL_DBL* pp_in_i)
+static int qqFFT_1(long int N, FL_DBL* p_o_r, FL_DBL* p_o_i, FL_DBL* pp_in_r, FL_DBL* pp_in_i)
 {
 FL_DBL*	tmp_r;
 FL_DBL*	tmp_i;
@@ -393,7 +393,7 @@ void ft_1(long int N)
 
 //FFT FOR REAL FUNCTION
 //f_0,f_1,f_2,f_3...f_{N-1} => A_c_0,(A_s_0=0),A_c_1,A_s_1,...A_c_{N/2-1},A_s_{N/2-1}.
-int qqFFT_freal(long int N, FL_DBL* p_o_r, FL_DBL* pp_in_r)
+static int qqFFT_freal(long int N, FL_DBL* p_o_r, FL_DBL* pp_in_r)
 {
 FL_DBL* pp_in_i;
 FL_DBL* p_o_i;
@@ -523,7 +523,7 @@ long int a1,a2,a3,a4,a0,k1,dim,p_dim,N_l,cFT;
 
 
 //INVERT
-int qqFFT_freal_1(long int N, FL_DBL* p_o_r, FL_DBL* pp_in_r)
+static int qqFFT_freal_1(long int N, FL_DBL* p_o_r, FL_DBL* pp_in_r)
 {
 FL_DBL* pp_in_i;
 FL_DBL* p_o_i;

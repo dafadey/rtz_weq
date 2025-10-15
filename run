@@ -12,7 +12,8 @@ cp ../pics/plot pics
 cp ../pics/plotall pics
 cp ../pics/mkmovie pics
 echo "running (./appl $1 $2 $3 $4 > /dev/null &)"
-(./appl $1 $2 $3 $4 > /dev/null &)
+#(./appl $1 $2 $3 $4 > /dev/null &)
+./appl $1 $2 $3 $4
 cd ..
 
 

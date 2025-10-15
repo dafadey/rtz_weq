@@ -99,7 +99,7 @@ simpleSWEEPKernel( FL_DBL* a, FL_DBL* b, FL_DBL* c, FL_DBL* y, FL_DBL* x, int NX
 		
 			yy[tid*2+NY*(i+1)*2]=y[tid*2+NY*(i+1)*2]-mulRe(yy[tid*2+NY*i*2],yy[tid*2+1+NY*i*2],k[0],k[1]);
 			yy[tid*2+1+NY*(i+1)*2]=y[tid*2+1+NY*(i+1)*2]-mulIm(yy[tid*2+NY*i*2],yy[tid*2+1+NY*i*2],k[0],k[1]);
-			//syncthreads();
+			//__syncthreads();
 		}
 	//backward sweep:
 	//find the first x:
@@ -268,18 +268,11 @@ SWEEP_1_FIXED_Kernel(FL_DBL* AX, FL_DBL* BX, FL_DBL* CX, FL_DBL* AY, FL_DBL* BY,
   if (tid<NY-1) //caution!!! needs revision.
   {
 
-
-    sAY[threadIdx.x]=AY[threadIdx.x+blockDim.x*blockIdx.x*2];
-    sAY[threadIdx.x+blockDim.x]=AY[threadIdx.x+blockDim.x+blockDim.x*blockIdx.x*2];
-
-    sAY[threadIdx.x+BLOCKY*2]=AY[threadIdx.x+blockDim.x*blockIdx.x*2+NY*2];
-    sAY[threadIdx.x+blockDim.x+BLOCKY*2]=AY[threadIdx.x+blockDim.x+blockDim.x*blockIdx.x*2+NY*2];
-
-
-//    sAY[threadIdx.x*2+BLOCKY*4]=AY[tid*2+NY*4];		//redundant since NOFA=2
-//    sAY[threadIdx.x*2+1+BLOCKY*4]=AY[tid*2+1+NY*4];	//redundant since NOFA=2
-
-
+	for(int i=0;i<NOFA;i++)
+	{
+		sAY[threadIdx.x+BLOCKY*2*i]=AY[threadIdx.x+blockDim.x*blockIdx.x*2+NY*2*i];
+		sAY[threadIdx.x+blockDim.x+BLOCKY*2*i]=AY[threadIdx.x+blockDim.x+blockDim.x*blockIdx.x*2+NY*2*i];
+	}
 
     sBY[threadIdx.x]=BY[threadIdx.x+blockDim.x*blockIdx.x*2];
     sBY[threadIdx.x+blockDim.x]=BY[threadIdx.x+blockDim.x+blockDim.x*blockIdx.x*2];
@@ -287,13 +280,13 @@ SWEEP_1_FIXED_Kernel(FL_DBL* AX, FL_DBL* BX, FL_DBL* CX, FL_DBL* AY, FL_DBL* BY,
     sCY[threadIdx.x]=CY[threadIdx.x+blockDim.x*blockIdx.x*2];
     sCY[threadIdx.x+blockDim.x]=CY[threadIdx.x+blockDim.x+blockDim.x*blockIdx.x*2];
 
-		for(i=0;i<-floor(-FL_DBL(BLOCKX)/FL_DBL(BLOCKY));i++)
+	for(i=0;i<-floor(-FL_DBL(BLOCKX)/FL_DBL(BLOCKY));i++)
     {
 			if (threadIdx.x<BLOCKX)
 			{
-					sAX[threadIdx.x+i*BLOCKY]=AX[threadIdx.x+i*BLOCKY+tidy];
-					sAX[threadIdx.x+i*BLOCKY+BLOCKX]=AX[threadIdx.x+i*BLOCKY+tidy+NX];
-					//sAX[threadIdx.x+i*BLOCKY+BLOCKX*2]=AX[threadIdx.x+i*BLOCKY+tidy+NX*2];//redundant since NOFA=2
+					for(int j=0;j<NOFA;j++)
+						sAX[threadIdx.x+i*BLOCKY+BLOCKX*j]=AX[threadIdx.x+i*BLOCKY+tidy+NX*j];
+					
 					sBX[threadIdx.x+i*BLOCKY]=BX[threadIdx.x+i*BLOCKY+tidy];
 					sCX[threadIdx.x+i*BLOCKY]=CX[threadIdx.x+i*BLOCKY+tidy];
 			}
@@ -301,17 +294,15 @@ SWEEP_1_FIXED_Kernel(FL_DBL* AX, FL_DBL* BX, FL_DBL* CX, FL_DBL* AY, FL_DBL* BY,
 
   }
 
-  syncthreads();
+  __syncthreads();
   if(tid<NY)
   {
 		register FL_DBL ARe[NOFA];
-		ARe[0]=sAY[threadIdx.x*2];
-		ARe[1]=sAY[threadIdx.x*2+BLOCKY*2];
-		//ARe[2]=sAY[threadIdx.x*2+BLOCKY*4];//redundant since NOFA=2
+		for(int i=0;i<NOFA;i++)
+			ARe[i]=sAY[threadIdx.x*2+BLOCKY*2*i];
 		register FL_DBL AIm[NOFA];
-		AIm[0]=sAY[threadIdx.x*2+1];
-		AIm[1]=sAY[threadIdx.x*2+1+BLOCKY*2];
-		//AIm[2]=sAY[threadIdx.x*2+1+BLOCKY*4];//redundant since NOFA=2
+		for(int i=0;i<NOFA;i++)
+			AIm[i]=sAY[threadIdx.x*2+1+BLOCKY*2*i];
 		register FL_DBL BRe=sBY[threadIdx.x*2];
 		register FL_DBL BIm=sBY[threadIdx.x*2+1];
 		register FL_DBL CRe=sCY[threadIdx.x*2];
@@ -381,7 +372,7 @@ SWEEP_1_FIXED_Kernel(FL_DBL* AX, FL_DBL* BX, FL_DBL* CX, FL_DBL* AY, FL_DBL* BY,
 		}
 	//backward sweep:
 	//find the first x:
-		//syncthreads();
+		//__syncthreads();
 		adr=tid*2+NY*(tidy+BLOCKX-2)*2;
 		adr2=adr+NY*2;
 
@@ -693,7 +684,7 @@ simple_cpy_Kernel(FL_DBL* x, FL_DBL* y, FL_DBL CC, FL_DBL BB,int r, int bsx, int
 */
 
 
-	syncthreads();
+	__syncthreads();
 
 /*
 	for(i=0;i<r;i+=two)

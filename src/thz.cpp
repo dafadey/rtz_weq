@@ -8,9 +8,12 @@
 #include <math_constants.h>
 #include "dfs.h"
 #include "fft_real_3.cpp"
+#include "host_methods.h"
+
 double phase2w=1.57;
 double ratio2w=0.0; //ratio of second harmonic to first harmonic (by amplitude)
 double curvativity2w=1.0;
+double ampW=0.055;
 #include "thz_funcs.cpp"
 
 #ifdef DRAW
@@ -29,19 +32,6 @@ bool askforloadmore=false;
 bool esc=false;
 int adr;
 
-extern "C" 
-void cuda_load(FL_DBL*, int, int, FL_DBL, FL_DBL, FL_DBL);
-extern "C" 
-void get_spec(FL_DBL*, int, int);
-extern "C" 
-void get_field(FL_DBL*, int, int);
-extern "C" 
-void get_density(FL_DBL*, int, int);
-extern "C" 
-void get_THz_source(FL_DBL*, int, int);
-extern "C" 
-FL_DBL step(int, int, FL_DBL, bool);
-
 /*
 INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT
 INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT
@@ -51,8 +41,8 @@ INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-
 INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT
 INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT-INIT
 */
-int Ntau=NNT;
-int Nx=NNX;
+int Ntau=512*2+2;
+int Nx=512;
 FL_DBL dx=Lx/FL_DBL(Nx);
 FL_DBL dtau=T/FL_DBL(Ntau-2);
 FL_DBL dz=-0.5;
@@ -109,7 +99,7 @@ int flnum=-1;
 
 #ifdef SAVE
 	FILE* fp;
-	char* filename=new char[100];
+	char filename[100];
 	sprintf(filename,"pics/res/field%d.dat",flnum);
 	fp=fopen(filename,"w");
 	fprintf(fp,"head\n2d\t1\n%d\t%d\ndata\n",(Ntau-2)/SCR,Nx/SCR);
@@ -135,8 +125,8 @@ double e0=0;
 	    //calc energy;
 	    double energy=0;
 		
-		for(i=0;i<REP-1;i++) stptime=step(Ntau,Nx,z,false);
-		stptime=step(Ntau,Nx,z,true);
+		for(i=0;i<REP-1;i++) stptime=step(Ntau,Nx,z,T,false, 1., .0);
+		stptime=step(Ntau,Nx,z,true, 1., .0);
 
 		get_field(Ew_THZ,Ntau,Nx);
 		//get_spec(Ew_THZ,Ntau,Nx);
